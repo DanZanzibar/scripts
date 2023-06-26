@@ -24,20 +24,18 @@ symlinkdir = os.path.expanduser(args.symlinkdir)
 ignore_files = ['.git', '.gitignore', toml_file_name, 'backup']
 if 'ignore-files' in toml_general:
     ignore_files += toml_general['ignore-files']
-print(ignore_files)
+
 special_locations = {}
 if 'special-locations' in toml_data:
     toml_special = toml_data['special-locations']
     special_locations = {os.path.join(filedir, file): os.path.expanduser(address)
                          for file, address in toml_special.items()}
-print(special_locations)
+
 files_locations = {os.path.join(filedir, file): os.path.join(symlinkdir, file)
                    for file in os.listdir(filedir)
-                   if file not in ignore_files and special_locations}
+                   if file not in ignore_files and file not in special_locations}
 
 files_locations.update(special_locations)
-
-print(files_locations)
 
 backupdir = os.path.join(filedir, "backup")
 if not os.path.exists(backupdir):
@@ -48,10 +46,10 @@ for file, symlink in files_locations.items():
     if os.path.islink(symlink):
         os.remove(symlink)
         print(f'Existing symlink removed at {symlink}')
+
     elif os.path.exists(symlink):
         shutil.move(symlink, backupdir)
         print(f'Existing file backed up from {symlink}')
+
     os.symlink(file, symlink)
     print(f'Symlink created at {symlink}')
-
-# Gotta fix special locations keys - not full paths.
