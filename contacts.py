@@ -119,6 +119,7 @@ def days_since_contact(account: dict) -> int:
 
 def _priority(account: dict, config_constant: dict[str, int]) -> str:
     days = account['Days Since Contact']
+    account_priority = 'None'
 
     for priority in config_constant:
         if config_constant[priority][0] <= days < config_constant[priority][1]:
