@@ -4,7 +4,7 @@ from os import remove
 from datetime import date
 
 
-DATA_DIR = '/home/zan/sync-general/bin/contacts/'
+DATA_DIR = '/home/zan/sync-general/bin/customer-contacts/'
 FIELDNAMES = (
     'Customer No.',
     'Company',
