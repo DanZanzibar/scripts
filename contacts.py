@@ -18,9 +18,9 @@ FIELDNAMES = (
     'Days Since Contact',
     'Priority'
 )
-ACCOUNTS_FILE = 'accounts.csv'
-EXPORT_FILE = 'export.csv'
-CONTACTS_FILE = 'contacts.csv'
+ACCOUNTS_FILE = 'data.csv'
+EXPORT_FILE = 'customers.csv'
+CONTACTS_FILE = 'activities.csv'
 
 TOP50 = {
     "None": (0, 90),
