@@ -5,3 +5,7 @@ ssh-keygen -t ecdsa -b 521
 
 # Copy key to host machine.
 ssh-copy-id -i .ssh/id_ecdsa.pub zan@ #host machine
+
+# Once all keys are set up for clients, remove password auth on host.
+sudo emacs -nw /etc/ssh/sshd_config
+# Set the line 'Password Authentication no'.
