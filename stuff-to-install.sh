@@ -10,6 +10,8 @@ sudo apt install -y openssh-server
 sudo systemctl start ssh.service
 sudo systemctl enable ssh.service
 
+# Converts .msg (Outlook) files to .eml via the 'msgconvert' command.
+sudo apt install -y libemail-outlook-message-perl
 
 # Intellij-IDEA
 sudo snap install intellij-idea-ultimate --classic
