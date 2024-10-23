@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+layouts_arr=()
+while read -r -d ''; do
+    layouts_arr+=("${REPLY##*/}")
+done < <(find "$HERBST_LAYOUT_DIR" -maxdepth 1 -type f -print0)
+
+layouts=''
+for layout in "${layouts_arr[@]}"; do
+    layouts+="$layout"$'\n'
+done
+layouts=${layouts%$'\n'}
+
+echo -e "$layouts" | dmenu -p "$1" -w "$(xdo id)"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+prompt='Save layout (blank cancels):'
+layout_name="$("$HOME/scripts/herbstluftwm/_layout-choose" "$prompt")"
+if [[ $layout_name = '' ]]; then
+    exit 0
+fi
+herbstclient dump > "$HERBST_LAYOUT_DIR/$layout_name"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+prompt='Delete layout (blank cancels):'
+layout_name="$("$HOME/scripts/herbstluftwm/_layout-choose" "$prompt")"
+if [[ $layout_name = '' ]]; then
+    exit 0
+fi
+
+if [[ -f "$HERBST_LAYOUT_DIR/$layout_name" ]]; then
+    rm "$HERBST_LAYOUT_DIR/$layout_name"
+fi

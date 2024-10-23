@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+prompt='Load layout (blank cancels):'
+layout_name="$("$HOME/scripts/herbstluftwm/_layout-choose" "$prompt")"
+if [[ $layout_name = '' ]]; then
+    exit 0
+fi
+
+if [[ -f "$HERBST_LAYOUT_DIR/$layout_name" ]]; then
+    herbstclient load "$(cat "$HERBST_LAYOUT_DIR/$layout_name")"
+fi
