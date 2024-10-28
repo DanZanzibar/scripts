@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 prompt='Save layout (blank cancels):'
-layout_name="$("$HOME/scripts/herbstluftwm/_layout-choose" "$prompt")"
+layout_name="$("$HOME/sync/scripts/herbstluftwm/_layout-choose" "$prompt")"
 if [[ $layout_name = '' ]]; then
     exit 0
 fi
