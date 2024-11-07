@@ -1,0 +1,28 @@
+* General Settings
+- 3 bars top right -> View -> toolbars -> click Menu Bar and Quick Filter
+- Under View menu: Density -> compact
+- Button next to Quick Filter -> Table View
+- Tools -> Add-ons and Themes: Search for 'CollectAddresses' and add.
+  Right click 'Sent' folder to use add-on to add all outgoing addresses.
+* Outlook Settings
+** Incoming Server
+Hostname: outlook.office365.com
+Port: 993
+SSL/TLS
+OAuth2
+** Outgoing Server
+Hostname: smtp.office365.com
+Port: 587
+StartTLS
+OAuth2
+** Settings
+*** Main Settings Page for 'zowsley@electro-meters.com'
+- Attach signature from file
+*** Copies and Folders
+- Uncheck 'Place a copy'
+- Keep message archives in Other -> Archive on zowsley...
+- Click 'Archive Options' and select 'A single foler' and 'Keep existing ...'
+- Drafts Folder on -> Local Folders
+*** Composition and Addressing
+- place my signature 'below my reply...'
+- Include signatures for forwards

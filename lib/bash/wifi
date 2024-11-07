@@ -1,0 +1,18 @@
+wifi-list() {
+    export NETWORKS=$(nmcli -t -f SSID device wifi)
+    # export NETWORKS="$(echo "$networks_print" | tr '\n' ' ')"
+    echo "$NETWORKS"
+}
+
+wifi-connect() {
+    nmcli device wifi connect "$1" -a
+}
+
+_wifi-connect-completions() {
+    COMPREPLY=()
+    while IFS=$'\n' read ssid; do
+	COMPREPLY+=("$ssid")
+    done <<< "$NETWORKS"
+}
+
+complete -F _wifi-connect-completions wifi-connect
