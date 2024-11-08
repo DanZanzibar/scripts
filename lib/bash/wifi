@@ -9,12 +9,18 @@ wifi-connect() {
 }
 
 _wifi-connect-completions() {
-    local ssids=()
+    COMPREPLY=()
     while IFS=$'\n' read -r ssid; do
-	ssids+=("$ssid")
+	if [[ "$ssid" == *" "* ]]; then
+	    COMPREPLY+=("\"$ssid\"")
+	else
+	    COMPREPLY+=("$ssid")
+	fi
     done <<< "$NETWORKS"
-    COMPREPLY=( $(compgen -W ${ssids[@]} -- "$2") )
-    declare -p COMPREPLY
 }
 
-complete -F _wifi-connect-completions wifi-connect
+_wifi-connect-completions2() {
+    compgen -F _wifi-connect-completions -- "$2"
+}
+
+complete -C _wifi-connect-completions2 wifi-connect
