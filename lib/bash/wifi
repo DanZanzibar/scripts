@@ -1,26 +1,87 @@
+# Functions for streamlining the use of nmcli in connecting to networks.
+
+# Display available networks. Ignore nameless networks and don't show duplicates.
 wifi-list() {
-    export NETWORKS=$(nmcli -t -f SSID device wifi)
-    # export NETWORKS="$(echo "$networks_print" | tr '\n' ' ')"
-    echo "$NETWORKS"
+    local ssids=$(nmcli -t -f SSID device wifi)
+    NETWORKS=()
+    while IFS=$'\n' read -r ssid; do
+	if [[ -n "$ssid" ]]; then
+
+	    #Check for duplicates - only add if unique.
+	    local already_exists=false
+	    for network in "${NETWORKS[@]}"; do
+		if [[ "$network" == "$ssid" ]]; then
+		    already_exists=true
+		fi
+	    done
+
+	    if [[ "$already_exists" == false ]]; then
+		NETWORKS+=("$ssid")
+	    fi
+	fi
+    done <<< "$ssids"
+    export NETWORKS
+    for network in "${NETWORKS[@]}"; do
+	echo "$network"
+    done
 }
 
+# Connect to a network with completion (see below).
 wifi-connect() {
     nmcli device wifi connect "$1" -a
 }
 
+# Completion function for 'wifi-connect'. Gets complicated since we want to
+# include networks with spaces in the name and need to escape various
+# characters before and after using compgen.
 _wifi-connect-completions() {
     COMPREPLY=()
-    while IFS=$'\n' read -r ssid; do
-	if [[ "$ssid" == *" "* ]]; then
-	    COMPREPLY+=("\"$ssid\"")
-	else
-	    COMPREPLY+=("$ssid")
-	fi
-    done <<< "$NETWORKS"
+
+    # The newline separator makes a lot of things easier.
+    local IFS=$'\n'
+    
+    local escaped_single_qoute="'\''"
+    local networks_formatted=()
+    local i=0
+
+    # Escape single quotes in network names. compgen will strip them out if not
+    # escaped.
+    for entry in "${NETWORKS[@]}"; do
+	entry="${entry//\'/\\\'}"
+	networks_formatted[$i]="$entry"
+	(( i++ ))
+    done
+
+    COMPREPLY=($(compgen -W "${networks_formatted[*]}" -- "$2"))
+
+    local i=0
+    for entry in ${COMPREPLY[*]}; do
+        if [[ "${2:0:1}" == "'" ]]; then
+            # started with single quote, escaping only other single quotes
+            # [']bla'bla"bla\bla bla --> [']bla'\''bla"bla\bla bla
+            COMPREPLY[$i]="${entry//\'/${escaped_single_qoute}}" 
+        elif [[ "${2:0:1}" == "\"" ]]; then
+            # started with double quote, escaping all double quotes and all backslashes
+            # ["]bla'bla"bla\bla bla --> ["]bla'bla\"bla\\bla bla
+            entry="${entry//\\/\\\\}"
+            entry="${entry//\"/\\\"}"
+            entry="${entry//!/\"\\!\"}"
+            COMPREPLY[$i]="$entry"
+        else 
+            # no quotes in front, escaping _everything_
+            # [ ]bla'bla"bla\bla bla --> [ ]bla\'bla\"bla\\bla\ bla
+            entry="${entry//\\/\\\\}"
+            entry="${entry//\'/\\\'}"
+            entry="${entry//\"/\\\"}"
+            entry="${entry// /\\ }"
+            entry="${entry//\(/\\(}"
+            entry="${entry//)/\\)}"
+            entry="${entry//!/\\!}"
+            entry="${entry//&/\\&}"
+            COMPREPLY[$i]="$entry"
+        fi
+        (( i++ ))
+    done
 }
 
-_wifi-connect-completions2() {
-    compgen -F _wifi-connect-completions -- "$2"
-}
-
-complete -C _wifi-connect-completions2 wifi-connect
+complete -F _wifi-connect-completions wifi-connect
