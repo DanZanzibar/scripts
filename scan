@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+scanimage --device "airscan:w0:CANON INC. TR4700 series" --format=pdf --output-file "$1".pdf --progress

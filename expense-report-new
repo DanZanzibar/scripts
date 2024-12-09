@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+EXPENSE_DIR="$SYNC_DIR/work-docs/expense-reports/"
+
+echo 'Enter year'
+read year
+
+echo 'Enter month by number'
+read month
+
+if [[ ! -d "$EXPENSE_DIR/$year" ]]; then
+    mkdir "$EXPENSE_DIR/$year"
+fi
+if [[ ! -d "$EXPENSE_DIR/$year/$month" ]]; then
+    mkdir "$EXPENSE_DIR/$year/$month"
+fi
+
+mkdir "$EXPENSE_DIR/$year/$month/receipts-to-merge"
+cp "$EXPENSE_DIR/template.xls" "$EXPENSE_DIR/$year/$month/$year-$month.xls"
