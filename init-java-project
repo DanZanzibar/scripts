@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+mkdir bin src
+echo ';;; Directory Local Variables            -*- no-byte-compile: t -*-
+;;; For more information see (info "(emacs) Directory Variables")
+
+((nil . ((compile-command . "javac -d bin $(find src -name \"*.java\")")))
+ (java-ts-mode . ((eglot-workspace-configuration . (:java (:project (:sourcePaths ["src"]))))))
+ (java-mode . ((eglot-workspace-configuration . (:java (:project (:sourcePaths ["src"])))))))
+' > .dir-locals.el
+touch .project.el

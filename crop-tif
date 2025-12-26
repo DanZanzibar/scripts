@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Check for exactly 3 arguments
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 reference.tif source.tif output.tif"
+    exit 1
+fi
+
+ref="$1"
+src="$2"
+out="$3"
+
+# Get pixel resolution (xres, yres)
+read px py <<< $(gdalinfo "$ref" | grep "Pixel Size" | sed 's/[^0-9.\-]*//g' | awk -F',' '{print $1, -$2}')
+
+# Get bounding box: xmin, ymax, xmax, ymin
+read xmin ymax <<< $(gdalinfo "$ref" | grep "Upper Left" | awk '{print $4, $5}')
+read xmax ymin <<< $(gdalinfo "$ref" | grep "Lower Right" | awk '{print $4, $5}')
+
+# Run gdalwarp to align and resample
+gdalwarp -of GTiff -r bilinear -tap \
+  -t_srs "$ref" \
+  -tr $px $py \
+  -te $xmin $ymin $xmax $ymax \
+  "$src" "$out"

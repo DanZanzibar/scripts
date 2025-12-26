@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+usage() {
+    echo "Usage: $0 <assignment-dir>"
+    echo ""
+    echo "Note: Remove backslash from end of directory name."
+    echo ""
+    echo "Options: -h, --help"
+    exit 1
+}
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    usage
+fi
+
+if [[ $# -ne 1 ]]; then
+    usage
+fi
+
+archive="COMP390_$1_OwsleyZan_3756495.zip"
+
+zip -r "$archive" "$1" -x "**/cmake-build-debug/*" "**/.idea/*" "**/.git/*" "**/.gitignore"

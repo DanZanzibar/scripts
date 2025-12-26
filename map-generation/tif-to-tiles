@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+
+# Should be executed in the directory containing the 'dem-source' directory.
+mkdir tmp output output/tiles
+ls -1 dem-source/*.tif > tmp/tif-list.txt
+gdal_merge --optfile tmp/tif-list.txt -o tmp/merged.tif
+gdal raster clip --bbox=-11,49.8,1.9,59.7 tmp/merged.tif tmp/clipped.tif
+gdalwarp -t_srs EPSG:27700 tmp/clipped.tif output/great-britain.tif
+rm tmp/*
+
+gdal_translate -of png -outsize 1025 1025 -scale -ot UInt16 output/great-britain.tif output/entire_map_1025_1025.png
+gdal_retile -of png -ot UInt16 -ps 513 513 -targetDir output/tiles output/great-britain.tif

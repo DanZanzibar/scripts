@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+
+bin_dir="$(pwd)/bin"
+echo "Clean $bin_dir first? (y/n)"
+read clean
+if [[ $clean == "y" ]]; then
+    rm -r bin
+    mkdir bin
+fi
+javac -d bin $(find src -name "*.java")

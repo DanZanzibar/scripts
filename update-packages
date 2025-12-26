@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pkg_lists="$SYNC_DIR/zan-arch-install/packages"
+all_pkgs=$(cat "$pkg_lists/base.txt" "$pkg_lists/audio.txt" "$pkg_lists/gui.txt" "$pkg_lists/network.txt" "$pkg_lists/programming.txt" "$pkg_lists/others.txt")
+
+sudo pacman -Syu
+sudo pacman -S --needed $all_pkgs
